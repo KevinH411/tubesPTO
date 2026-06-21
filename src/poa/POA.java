@@ -1,40 +1,27 @@
 package poa;
 
-import fss.FSS;
 import java.util.Random;
 
 public class POA {
     private Pelican[] populasi;
     private Pelican bestPelican;
-    private int[][] jadwal;
+    private PelicanFitness fitness;
+    private PelicanExploration eksplorasi;
+    private PelicanExploitation eksploitasi;
 
     public POA(int ukuranPopulasi, int[][] jadwal, int maksIterasi) {
-        this.jadwal = jadwal;
+        this.fitness = new PelicanFitness(jadwal);
+        this.eksplorasi = new PelicanExploration(fitness);
+        this.eksploitasi = new PelicanExploitation();
         this.populasi = new Pelican[ukuranPopulasi];
-        
+
         for (int i = 0; i < ukuranPopulasi; i++) {
             populasi[i] = new Pelican(jadwal[0].length, jadwal.length);
-            evaluasi(populasi[i]);
+            fitness.evaluasi(populasi[i]);
         }
-        
+
         updateBestPelican();
         jalankanAlgoritma(maksIterasi);
-    }
-
-    private void evaluasi(Pelican p) {
-        FSS penghitung = new FSS(p.getUrutanPekerjaan(), p.getUrutanMesin(), jadwal);
-        p.setMakespan(penghitung.getMakespan());
-        p.setTotalFlowTime(penghitung.getTotalFlowTime());
-    }
-
-    private boolean isLebihBaik(Pelican p1, Pelican p2) {
-        double bobotMS = 0.5;
-        double bobotTFT = 0.5;
-        
-        double skor1 = (bobotMS * p1.getMakespan()) + (bobotTFT * p1.getTotalFlowTime());
-        double skor2 = (bobotMS * p2.getMakespan()) + (bobotTFT * p2.getTotalFlowTime());
-        
-        return skor1 < skor2;
     }
 
     private void updateBestPelican() {
@@ -42,7 +29,7 @@ public class POA {
             bestPelican = clonePelican(populasi[0]);
         }
         for (Pelican p : populasi) {
-            if (isLebihBaik(p, bestPelican)) {
+            if (fitness.isLebihBaik(p, bestPelican)) {
                 bestPelican = clonePelican(p);
             }
         }
@@ -58,36 +45,30 @@ public class POA {
 
     private void jalankanAlgoritma(int maksIterasi) {
         Random rand = new Random();
-        PelicanExploitation eksploitasi = new PelicanExploitation();
 
         for (int t = 1; t <= maksIterasi; t++) {
             for (int i = 0; i < populasi.length; i++) {
                 Pelican current = populasi[i];
+
+                // fase 1, exploration
                 Pelican candidate = clonePelican(current);
-                
                 int preyIndex = rand.nextInt(populasi.length);
                 Pelican prey = populasi[preyIndex];
-                int I = rand.nextInt(2) + 1;
-                
-                for (int j = 0; j < candidate.getSolusi().arr.length; j++) {
-                    if (isLebihBaik(prey, current)) {
-                        candidate.getSolusi().arr[j] = current.getSolusi().arr[j] + rand.nextDouble() * (prey.getSolusi().arr[j] - I * current.getSolusi().arr[j]);
-                    } else {
-                        candidate.getSolusi().arr[j] = current.getSolusi().arr[j] + rand.nextDouble() * (current.getSolusi().arr[j] - prey.getSolusi().arr[j]);
-                    }
-                }
-                
-                evaluasi(candidate);
-                if (isLebihBaik(candidate, current)) {
+
+                eksplorasi.hitung(candidate, current, prey, rand);
+                fitness.evaluasi(candidate);
+
+                if (fitness.isLebihBaik(candidate, current)) {
                     populasi[i] = clonePelican(candidate);
                     current = populasi[i];
                 }
-                
+
+                // fase 2, exploitation
                 candidate = clonePelican(current);
                 eksploitasi.hitung(candidate, current, t, maksIterasi, rand);
-                evaluasi(candidate);
-                
-                if (isLebihBaik(candidate, current)) {
+                fitness.evaluasi(candidate);
+
+                if (fitness.isLebihBaik(candidate, current)) {
                     populasi[i] = candidate;
                 }
             }
