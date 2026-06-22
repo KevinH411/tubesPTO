@@ -1,0 +1,16 @@
+1. Pastikan komputer sudah terinstal program Java.
+
+2. Buka Command Prompt atau Terminal di dalam folder tempat file PelicanOptimization.jar berada.
+
+3. Ketik perintah berikut lalu tekan enter: java -jar PelicanOptimization.jar
+(Alternatif: Klik ganda pada file PelicanOptimization.jar melalui File Explorer).
+
+4. Pada halaman awal aplikasi yang muncul, klik tombol Mulai.
+
+5. Klik tombol Cari untuk memuat file dataset, cari dari folder test_case (contoh: tai20_5.txt).
+
+6. Tentukan nilai pada Banyak Individu dan Maksimum Iterasi.
+
+7. Pilih nomor soal yang akan diuji melalui menu drop down, lalu klik Lanjut.
+
+8. Tunggu beberapa saat hingga program selesai melakukan kalkulasi dan menampilkan hasil urutan pekerjaan, Makespan, dan Total Flow-Time.
