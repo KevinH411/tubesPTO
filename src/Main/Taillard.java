@@ -16,7 +16,7 @@ public class Taillard {
         this.soalTerpilih = soalTerpilih;
         
         for (int i = 0; i < 10; i++) {
-            this.hitungMS = new POA(banyakIndividu, kasusTaillard.getKumpulanSoal()[i].getSoal(), maksIterasi);
+            this.hitungMS = new POA(banyakIndividu, kasusTaillard.getKumpulanSoal()[i].getSoal(), maksIterasi, kasusTaillard.getSeeds()[i]);
             this.pemenangTiapSoal[i] = hitungMS.getBestPelican();
         }
         

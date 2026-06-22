@@ -1,14 +1,16 @@
 package poa;
 
+import java.util.Random;
+
 public class Pelican {
     private Solution solusi;
     private int[] urutanMesin;
     private int makespan;
     private int totalFlowTime;
 
-    public Pelican(int banyakPekerjaan, int banyakMesin) {
+    public Pelican(int banyakPekerjaan, int banyakMesin, Random rand) {
         this.solusi = new Solution(banyakPekerjaan);
-        this.solusi.randomize(new java.util.Random());
+        this.solusi.randomize(rand);
         
         this.urutanMesin = new int[banyakMesin];
         for (int i = 0; i < banyakMesin; i++) {

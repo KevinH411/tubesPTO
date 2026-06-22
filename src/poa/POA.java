@@ -8,15 +8,17 @@ public class POA {
     private PelicanFitness fitness;
     private PelicanExploration eksplorasi;
     private PelicanExploitation eksploitasi;
+    private Random rand;
 
-    public POA(int ukuranPopulasi, int[][] jadwal, int maksIterasi) {
+    public POA(int ukuranPopulasi, int[][] jadwal, int maksIterasi, long seed) {
         this.fitness = new PelicanFitness(jadwal);
         this.eksplorasi = new PelicanExploration(fitness);
         this.eksploitasi = new PelicanExploitation();
         this.populasi = new Pelican[ukuranPopulasi];
+        this.rand = new Random(seed);
 
         for (int i = 0; i < ukuranPopulasi; i++) {
-            populasi[i] = new Pelican(jadwal[0].length, jadwal.length);
+            populasi[i] = new Pelican(jadwal[0].length, jadwal.length, rand);
             fitness.evaluasi(populasi[i]);
         }
 
@@ -36,7 +38,7 @@ public class POA {
     }
 
     private Pelican clonePelican(Pelican source) {
-        Pelican clone = new Pelican(source.getSolusi().arr.length, source.getUrutanMesin().length);
+        Pelican clone = new Pelican(source.getSolusi().arr.length, source.getUrutanMesin().length, rand);
         System.arraycopy(source.getSolusi().arr, 0, clone.getSolusi().arr, 0, source.getSolusi().arr.length);
         clone.setMakespan(source.getMakespan());
         clone.setTotalFlowTime(source.getTotalFlowTime());
@@ -44,8 +46,6 @@ public class POA {
     }
 
     private void jalankanAlgoritma(int maksIterasi) {
-        Random rand = new Random();
-
         for (int t = 1; t <= maksIterasi; t++) {
             for (int i = 0; i < populasi.length; i++) {
                 Pelican current = populasi[i];

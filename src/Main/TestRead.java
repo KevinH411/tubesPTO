@@ -22,6 +22,7 @@ public class TestRead {
     private int banyakPekerjaan;
     private int banyakMesin;
     private String lokasiFile;
+    private long[] seeds;
     private int[] batasAtas;
     private int[] batasBawah;
 
@@ -29,6 +30,7 @@ public class TestRead {
         this.lokasiFile = lokasiFile;
         this.batasAtas = new int[10];
         this.batasBawah = new int[10];
+        this.seeds = new long[10];
         this.isi = new String();
         this.ubahKeString();
         this.kumpulanSoal = new Soal[10];
@@ -58,6 +60,10 @@ public class TestRead {
         return batasBawah;
     }
 
+    public long[] getSeeds() {
+        return seeds;
+    }
+
     private void ubahKeString() {
         BufferedReader br = null;
         StringTokenizer st = null;
@@ -71,7 +77,7 @@ public class TestRead {
                     st = new StringTokenizer(baris);
                     this.banyakPekerjaan = Integer.parseInt(st.nextToken());
                     this.banyakMesin = Integer.parseInt(st.nextToken());
-                    st.nextToken();
+                    this.seeds[hitungBatas] = Long.parseLong(st.nextToken());
                     this.batasAtas[hitungBatas] = Integer.parseInt(st.nextToken());
                     this.batasBawah[hitungBatas] = Integer.parseInt(st.nextToken());
                     hitungBatas++;
@@ -80,7 +86,7 @@ public class TestRead {
                     st = new StringTokenizer(baris);
                     st.nextToken();
                     st.nextToken();
-                    st.nextToken();
+                    this.seeds[hitungBatas] = Long.parseLong(st.nextToken());
                     this.batasAtas[hitungBatas] = Integer.parseInt(st.nextToken());
                     this.batasBawah[hitungBatas] = Integer.parseInt(st.nextToken());
                     hitungBatas++;
