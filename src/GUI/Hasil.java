@@ -25,13 +25,14 @@ public class Hasil extends JFrame {
         hasil.append("\nTotal Flow-Time : ").append(taillard.getPemenangTiapSoal()[soalTerpilih].getTotalFlowTime());
         teksHasil.setText(hasil.toString());
 
-        String[] kolom = {"No. Soal", "Makespan", "Total Flow-Time"};
+        String[] kolom = {"No. Soal", "Makespan", "Total Flow-Time", "Runtime(ms)"};
         DefaultTableModel model = new DefaultTableModel(kolom, 0);
         
         for (int i = 0; i < taillard.getPemenangTiapSoal().length; i++) {
             int ms = taillard.getPemenangTiapSoal()[i].getMakespan();
             int tft = taillard.getPemenangTiapSoal()[i].getTotalFlowTime();
-            model.addRow(new Object[]{i + 1, ms, tft});
+            long runtime = taillard.getRuntimeTiapSoal()[i];
+            model.addRow(new Object[]{i + 1, ms, tft, runtime});
         }
         
         JTable tabelHasil = new JTable(model);
